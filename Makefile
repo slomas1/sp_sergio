@@ -3,6 +3,6 @@ all : server  peer
 server : 
 	gcc -o manager tcp-server.c 
 peer :
-	gcc -o client tcp-client.c 
+	gcc -o bingo tcp-client.c 
 clean :
-	rm  manager client message tcp-client tcp-server
+	rm -f  manager bingo tcp-client tcp-server
