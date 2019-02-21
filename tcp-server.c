@@ -11,6 +11,8 @@
 #define BACKLOG	128
 
 
+int registerPlayer(char *playerName,char *ipAddres,char *port);
+struct player_query pquery();
 struct player playerDB[100];
 //char *pqList[500];
 
@@ -29,8 +31,9 @@ EchoString(int sockfd)
     ssize_t n;
     char    line[ECHOMAX];
     struct message readMsg;
+    struct player_query queryMsg;
 
-    //for ( ; ; ) {
+      // printf("Enter ECHOSTRING\n");
 	//    if ( (n = read(sockfd, line, ECHOMAX)) == 0 )
 //        printf("DEBUG \n");
 
@@ -42,10 +45,28 @@ EchoString(int sockfd)
    //     printf("DEBUG3 \n");
         
         readMsg.command[ n ] = '\0';            
-        printf("Command = %s\n",readMsg.command );
+       printf("Command = %s\n",readMsg.command );
         printf("arg1 = %s\n",readMsg.arg1 );
-//        write(sockfd, line, n );
-    //}
+
+
+	if(strcmp(readMsg.command,"register") == 0 )
+	{
+//	printf("\nCommand = %s",readMsg.command);
+		if(registerPlayer(readMsg.arg1,readMsg.arg2,readMsg.arg3) == 0)
+			strcpy(line,"Success");
+		else
+			strcpy(line,"Player exists");
+	}
+	if(strcmp(readMsg.command,"player query") == 0 )
+	{
+//	printf("\nCommand = %s",readMsg.command);
+		queryMsg=pquery();
+			strcpy(line,"Query Success");
+       	 	//write(sockfd, &queryMsg, sizeof(struct player_query) );
+	}
+	//registerPlayer(char *playerName,char *ipAddres,char *port)
+        write(sockfd, line, n );
+       // write(sockfd, sendMsg, sizeof(message) );
 }
 
 
@@ -163,7 +184,11 @@ main(int argc, char **argv)
 	cliAddrLen = sizeof(echoClntAddr);
 	connfd = accept( sock, (struct sockaddr *) &echoClntAddr, &cliAddrLen );
 
+for(;;)
+{
 	EchoString(connfd);
+}
+printf("EXIT ECHOSTRING");
 	close(connfd);
 char str[50];
 strcpy(str,"test");

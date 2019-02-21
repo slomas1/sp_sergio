@@ -5,4 +5,4 @@ server :
 peer :
 	gcc -o bingo tcp-client.c 
 clean :
-	rm -f  manager bingo tcp-client tcp-server
+	rm -f a.out manager bingo tcp-client tcp-server

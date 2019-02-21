@@ -24,10 +24,16 @@ str_cli(struct message msg, int sockfd)
 {
 	ssize_t n;
         char    sendline[ECHOMAX], recvline[ECHOMAX];
+	struct player_query qmsg;
 
-       // while (fgets(sendline, ECHOMAX, fp) != NULL) {
+       /// while (fgets(sendline, ECHOMAX, fp) != NULL) {
 
                 write(sockfd, &msg, sizeof(struct message));
+	//	if ( (n = read(sockfd, &msg, sizeof(struct message))) == 0)
+	//	if ( (n = read(sockfd, &qmsg, sizeof(struct player_query))) == 0)
+                if ( (n = read(sockfd, recvline, ECHOMAX)) == 0)
+
+                        DieWithError("str_cli: server terminated prematurely");
                 //write(sockfd, sendline, strlen(sendline));
 
                 //if ( (n = read(sockfd, recvline, ECHOMAX)) == 0)
@@ -35,7 +41,8 @@ str_cli(struct message msg, int sockfd)
                 //        DieWithError("str_cli: server terminated prematurely");
 
 				//msg[ n ] = '\0';
-                //printf("\nresponse from server\n");
+                printf("\nresponse from server: %s\n",recvline);
+                //printf("\nresponse from server: %s\n",recvline);
                 //fputs(msg, stdout);
         //}
 }
@@ -47,7 +54,7 @@ main(int argc, char **argv)
 	struct sockaddr_in servaddr;
 	struct message in_msg;
 	strcpy(in_msg.command,"register");
-	strcpy(in_msg.arg1,"Sora");
+	strcpy(in_msg.arg1,"Sergio");
 	strcpy(in_msg.arg2,"192.168.1.69");
 	strcpy(in_msg.arg3,"6969");
 	if (argc != 3)
@@ -62,6 +69,11 @@ main(int argc, char **argv)
 
 	connect(sockfd, (struct sockaddr *) &servaddr, sizeof(servaddr));
 
+	str_cli(in_msg, sockfd);		/* do it all */
+	strcpy(in_msg.command,"query players");
+	strcpy(in_msg.arg1,"");
+	strcpy(in_msg.arg2,"");
+	strcpy(in_msg.arg3,"");
 	str_cli(in_msg, sockfd);		/* do it all */
 	//str_cli(stdin, sockfd);		/* do it all */
 
