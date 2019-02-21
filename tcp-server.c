@@ -32,16 +32,18 @@ EchoString(int sockfd)
 
     //for ( ; ; ) {
 	//    if ( (n = read(sockfd, line, ECHOMAX)) == 0 )
-        printf("DEBUG \n");
+//        printf("DEBUG \n");
+
         if ( (n = read(sockfd, &readMsg, sizeof(struct message))) == 0 )
         {
-        printf("DEBUG2 \n");
+ //       printf("DEBUG2 \n");
    	    	return; /* connection closed by other end */
         }
-        printf("DEBUG3 \n");
+   //     printf("DEBUG3 \n");
         
         readMsg.command[ n ] = '\0';            
         printf("Command = %s\n",readMsg.command );
+        printf("arg1 = %s\n",readMsg.arg1 );
 //        write(sockfd, line, n );
     //}
 }
@@ -119,13 +121,13 @@ int
 main(int argc, char **argv)
 {
     strcpy(playerDB[0].name,"Tail");
-    registerPlayer("playerName","192.168.1.1","420");
-    registerPlayer("playerName2","192.168.1.2","950");
+    //registerPlayer("playerName","192.168.1.1","420");
+    //registerPlayer("playerName2","192.168.1.2","950");
     //playerDB_Print(playerDB);
-    printf("Players=%d\n%s\n",pquery().players,pquery().List);
+    //printf("Players=%d\n%s\n",pquery().players,pquery().List);
     //pquery();
-}
-/*
+//}
+//*
     int sock, connfd;                
     struct sockaddr_in echoServAddr;
     struct sockaddr_in echoClntAddr;
@@ -167,7 +169,6 @@ char str[50];
 strcpy(str,"test");
     //printf("registered players = %d",registerPlayer(str));
 	//playerSearch(str);
-dbAdd(str);
 }
-*/
+//*/
 
