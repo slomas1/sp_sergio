@@ -30,6 +30,39 @@ void playerDB_Print(struct player playerArray[])
 	}
 }
 
+void playerDB_Delete(struct player playerArray[],char *deletePlayer)
+{
+	int size=playerDB_GetSize(playerArray);
+	int playerDeleted=0;
+	struct player temp;
+	for(int i=0;i<size;i++)
+	{
+		temp=playerArray[i+1];
+		if(playerDeleted==1)
+		{
+	printf("Player already deleted");
+			playerArray[i]=temp;
+
+		}
+		if(strcmp(playerArray[i].name,deletePlayer)==0)
+		{
+			printf("playerArray[%d] = %s\n",i,playerArray[i].name);
+			playerArray[i]=temp;
+			playerDeleted=1;
+			
+		}
+		
+		
+	}
+
+
+	//strcpy(playerArray[size+1].name,"Tail");
+	//playerArray[size]=newPlayer;
+	
+}
+
+
+
 //void playerDB_List(struct player playerArray[])
 char* playerDB_List(struct player playerArray[])
 {
@@ -45,7 +78,8 @@ char* playerDB_List(struct player playerArray[])
 		strcat(text,",");
 		strcat(text,playerArray[i].port);
 		strcat(text,")");
-		strcat(text,",");
+		if(i!=size-1)
+			strcat(text,",");
 
 		//printf("playerArray[%d].name=%s\n",i,playerArray[i].name );
 		//printf("playerArray[%d].ip=%s\n",i,playerArray[i].ip );

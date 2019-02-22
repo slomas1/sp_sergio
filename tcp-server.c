@@ -57,15 +57,15 @@ EchoString(int sockfd)
 		else
 			strcpy(line,"Player exists");
 	}
-	if(strcmp(readMsg.command,"player query") == 0 )
+	if(strcmp(readMsg.command,"query players") == 0 )
 	{
-//	printf("\nCommand = %s",readMsg.command);
+	//printf("\nCommand = %s",readMsg.command);
 		queryMsg=pquery();
-			strcpy(line,"Query Success");
-       	 	//write(sockfd, &queryMsg, sizeof(struct player_query) );
+//			strcpy(line,"Query Success");
+       	 	write(sockfd, &queryMsg, sizeof(struct player_query) );
 	}
 	//registerPlayer(char *playerName,char *ipAddres,char *port)
-        write(sockfd, line, n );
+  //      write(sockfd, line, n );
        // write(sockfd, sendMsg, sizeof(message) );
 }
 
@@ -117,6 +117,15 @@ playerSearch(char *playerName)
         return foundPS;//NOT FOUND
 }
 
+
+int
+deregisterPlayer(char *playerName)
+{
+	
+	return 1;
+}
+
+
 int
 registerPlayer(char *playerName,char *ipAddres,char *port)
 {
@@ -142,13 +151,23 @@ int
 main(int argc, char **argv)
 {
     strcpy(playerDB[0].name,"Tail");
-    //registerPlayer("playerName","192.168.1.1","420");
-    //registerPlayer("playerName2","192.168.1.2","950");
+    registerPlayer("playerName1","192.168.1.1","420");
+    registerPlayer("playerName2","192.168.1.2","950");
+    registerPlayer("playerName3","192.168.1.3","313");
     //playerDB_Print(playerDB);
     //printf("Players=%d\n%s\n",pquery().players,pquery().List);
     //pquery();
-//}
-//*
+    playerDB_Print(playerDB);
+printf("\n\n");
+    playerDB_Delete(playerDB,"playerName2");
+    registerPlayer("playerName4","192.168.1.4","32");
+printf("\n\n");
+    playerDB_Print(playerDB);
+    registerPlayer("playerName5","192.168.1.5","333");
+printf("\n\n");
+    playerDB_Print(playerDB);
+}
+/*
     int sock, connfd;                
     struct sockaddr_in echoServAddr;
     struct sockaddr_in echoClntAddr;
@@ -184,11 +203,13 @@ main(int argc, char **argv)
 	cliAddrLen = sizeof(echoClntAddr);
 	connfd = accept( sock, (struct sockaddr *) &echoClntAddr, &cliAddrLen );
 
+
 for(;;)
 {
 	EchoString(connfd);
 }
 printf("EXIT ECHOSTRING");
+
 	close(connfd);
 char str[50];
 strcpy(str,"test");
