@@ -18,8 +18,9 @@ DieWithError(const char *errorMessage) /* External error handling function */
         exit(1);
 }
 
+//void str_cli(struct message msg, int sockfd)
 void
-str_cli(struct message msg, int sockfd)
+manager_talk(struct message msg, int sockfd)
 //str_cli(FILE *fp, int sockfd)
 {
 	ssize_t n;
@@ -31,7 +32,7 @@ str_cli(struct message msg, int sockfd)
                 write(sockfd, &msg, sizeof(struct message));
 	//	if ( (n = read(sockfd, &msg, sizeof(struct message))) == 0)
 	if(strcmp(msg.command,"register") != 0)
-{
+	{
 		if ( (n = read(sockfd, &qmsg, sizeof(struct player_query))) == 0)
                 //if ( (n = read(sockfd, recvline, ECHOMAX)) == 0)
 
@@ -44,11 +45,15 @@ str_cli(struct message msg, int sockfd)
 
 				//msg[ n ] = '\0';
                 printf("\nresponse from server:\nPlayers = %d\n%s\n",qmsg.players,qmsg.List);
- }               //printf("\nresponse from server: %s\n",recvline);
+	}               //printf("\nresponse from server: %s\n",recvline);
                 //fputs(msg, stdout);
         //}
 }
 
+void peer_talk()
+{
+
+}
 int
 main(int argc, char **argv)
 {
@@ -82,7 +87,8 @@ main(int argc, char **argv)
 	strcpy(in_msg.arg1,"");
 	strcpy(in_msg.arg2,"");
 	strcpy(in_msg.arg3,"");
-	str_cli(in_msg, sockfd);	
+	manager_talk(in_msg, sockfd);	
+	//str_cli(in_msg, sockfd);	
 	//str_cli(stdin, sockfd);		
 
 	exit(0);

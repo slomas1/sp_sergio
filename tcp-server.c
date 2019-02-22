@@ -6,7 +6,8 @@
 #include    <string.h>
 #include	<unistd.h>
 #include    "message.h"
-#include    "dbArray.h"
+#include    "playerDBArray.h"
+#include    "gameDBArray.h"
 #define	ECHOMAX	255		/* Longest string to echo */
 #define BACKLOG	128
 
@@ -51,7 +52,6 @@ EchoString(int sockfd)
 
 	if(strcmp(readMsg.command,"register") == 0 )
 	{
-//	printf("\nCommand = %s",readMsg.command);
 		if(registerPlayer(readMsg.arg1,readMsg.arg2,readMsg.arg3) == 0)
 			strcpy(line,"Success");
 		else
@@ -59,11 +59,24 @@ EchoString(int sockfd)
 	}
 	if(strcmp(readMsg.command,"query players") == 0 )
 	{
-	//printf("\nCommand = %s",readMsg.command);
 		queryMsg=pquery();
-//			strcpy(line,"Query Success");
        	 	write(sockfd, &queryMsg, sizeof(struct player_query) );
 	}
+    if(strcmp(readMsg.command,"start game") == 0 )
+    {
+
+        //queryMsg=pquery();
+          //  write(sockfd, &queryMsg, sizeof(struct player_query) );
+    }
+
+
+
+
+
+
+
+
+
 	//registerPlayer(char *playerName,char *ipAddres,char *port)
   //      write(sockfd, line, n );
        // write(sockfd, sendMsg, sizeof(message) );
@@ -98,30 +111,13 @@ pquery()
     //strcpy(newPQ.List,pqList);
     return newPQ;
 }
-int 
-playerSearch(char *playerName)
-{
-    //printf("Entered playerSearch\n");
-    int numPlayers=playerDB_GetSize(playerDB);
-    int foundPS=0;
-    //printf("get size complete\n");
-    if (numPlayers>0)
-    {
-    	for(int i=0;i<numPlayers;i++)
-        {
-            if(strcmp(playerDB[i].name,playerName)==0)
-                foundPS=1;
-        }
-    }
-        //printf("numPlayers=%d\n",numPlayers );
-        return foundPS;//NOT FOUND
-}
 
 
 int
 deregisterPlayer(char *playerName)
 {
-	
+    //player
+	//playerDB_Delete(playerDB,playerName);
 	return 1;
 }
 
@@ -136,7 +132,8 @@ registerPlayer(char *playerName,char *ipAddres,char *port)
     strcpy(newPlayer.port,port);
 
     int found=0;
-    found=playerSearch(playerName);
+    found=playerSearch(playerDB,playerName);
+    //found=playerSearch(playerName);
     //printf("found complete\n");
     if(found!=1)
     {
