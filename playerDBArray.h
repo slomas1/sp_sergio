@@ -78,17 +78,17 @@ return text;
 }
 
 int 
-playerSearch(struct player playerDB[], char *playerName)
+playerSearch(struct player playerArray[], char *playerName)
 {
     //printf("Entered playerSearch\n");
-    int numPlayers=playerDB_GetSize(playerDB);
+    int numPlayers=playerDB_GetSize(playerArray);
     int foundPS=0;
     //printf("get size complete\n");
     if (numPlayers>0)
     {
     	for(int i=0;i<numPlayers;i++)
         {
-            if(strcmp(playerDB[i].name,playerName)==0)
+            if(strcmp(playerArray[i].name,playerName)==0)
                 foundPS=1;
         }
     }
@@ -97,15 +97,15 @@ playerSearch(struct player playerDB[], char *playerName)
 }
 
 int 
-playerIndex(struct player playerDB[], char *playerName)
+callerIndex(struct player playerArray[], char *callerIP)
 {
-	int numPlayers=playerDB_GetSize(playerDB);
+	int numPlayers=playerDB_GetSize(playerArray);
     int callerIndex=0;
     if (numPlayers>0)
     {
     	for(int i=0;i<numPlayers;i++)
         {
-            if(strcmp(playerDB[i].name,playerName)==0)
+            if(strcmp(playerArray[i].ip,callerIP)==0)
                 callerIndex=i;
         }
     }

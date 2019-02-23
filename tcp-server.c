@@ -13,12 +13,12 @@
 #define BACKLOG	128
 
 
+
 int registerPlayer(char *playerName,char *ipAddres,char *port);
 struct player_query pquery();
 struct player playerDB[100];
-struct player gameDB[100];
-//char *pqList[500];
-
+//struct player gameDB[100];
+//char callerIP[16];
 void 
 DieWithError(const char *errorMessage) /* External error handling function */
 {
@@ -28,8 +28,9 @@ DieWithError(const char *errorMessage) /* External error handling function */
 
 
 
+//EchoString(int sockfd,struct sockaddr_in Client)
 void
-EchoString(int sockfd,struct sockaddr_in Client)
+EchoString(int sockfd)
 {
     ssize_t n;
     char    line[ECHOMAX];
@@ -38,23 +39,22 @@ EchoString(int sockfd,struct sockaddr_in Client)
 
       // printf("Enter ECHOSTRING\n");
 	//    if ( (n = read(sockfd, line, ECHOMAX)) == 0 )
-//        printf("DEBUG \n");
 
         if ( (n = read(sockfd, &readMsg, sizeof(struct message))) == 0 )
         {
- //       printf("DEBUG2 \n");
    	    	return; /* connection closed by other end */
         }
-   //     printf("DEBUG3 \n");
         
         readMsg.command[ n ] = '\0';            
-//printf("IP address is: %s\n", inet_ntoa(Client.sin_addr));
-  char *callerIP=inet_ntoa(Client.sin_addr);
-printf("IP address is: %s\n", callerIP);
-       printf("Command = %s\n",readMsg.command );
-        printf("arg1 = %s\n",readMsg.arg1 );
 
-/*
+//printf("IP address is: %s\n", inet_ntoa(Client.sin_addr));
+  //char *callerIP=inet_ntoa(Client.sin_addr);
+//printf("IP address is: %s\n", callerIP);
+       
+    printf("Command = %s\n",readMsg.command );
+    printf("arg1 = %s\n",readMsg.arg1 );
+
+//*
 	if(strcmp(readMsg.command,"register") == 0 )
 	{
 		if(registerPlayer(readMsg.arg1,readMsg.arg2,readMsg.arg3) == 0)
@@ -74,7 +74,7 @@ printf("IP address is: %s\n", callerIP);
           //  write(sockfd, &queryMsg, sizeof(struct player_query) );
     }
 
- */
+ //*/
 
 
 
@@ -219,16 +219,29 @@ int i=0;
 int
 main(int argc, char **argv)
 {
-//	selectKplayers(4);
+   strcpy(playerDB[0].name,"Tail");
+//strcpy(callerIP,"192.168.1.3");//delete
+//printf("test\n");
+    registerPlayer("playerName3","192.168.1.5","313");
+    registerPlayer("playerName1","192.168.1.1","420");
+    registerPlayer("playerName2","192.168.1.2","950");
+    registerPlayer("playerName4","192.168.1.3","3313");
+    registerPlayer("playerName9","192.168.1.76","955");
+    registerPlayer("playerName7","192.168.1.68","952");
 
+    printf("callerID =%d\n" ,callerIndex(playerDB,"192.168.1.3"));
+	//selectKplayers(4);
+//int specialindex=callerIndex(playerDB,callerIP);
 
 //	int size=10;
 //srand(time(NULL)); // randomize seed
 //for(int i=0;i<size;i++)
  //   printf("rand=%d\n", rand()%size);
-//}
-//*
- /*   strcpy(playerDB[0].name,"Tail");
+}
+
+
+
+/*   strcpy(playerDB[0].name,"Tail");
     registerPlayer("playerName1","192.168.1.1","420");
     registerPlayer("playerName2","192.168.1.2","950");
     registerPlayer("playerName3","192.168.1.3","313");
@@ -244,9 +257,9 @@ printf("\n\n");
     registerPlayer("playerName5","192.168.1.5","333");
 printf("\n\n");
     playerDB_Print(playerDB);
-   */
+//   */
 
-
+/*
 
     int sock, connfd;                
     struct sockaddr_in echoServAddr;
@@ -258,6 +271,7 @@ printf("\n\n");
 
     struct message client_message;
 
+printf("declares\n");
     if (argc != 2)         
     {
         fprintf(stderr,"Usage: %s <TDP SERVER PORT>\n", argv[0]);
@@ -280,6 +294,7 @@ printf("\n\n");
 	if (listen(sock, BACKLOG) < 0 )
 		DieWithError("server: listen() failed");
 
+
 	cliAddrLen = sizeof(echoClntAddr);
 	connfd = accept( sock, (struct sockaddr *) &echoClntAddr, &cliAddrLen );
 
@@ -293,7 +308,7 @@ for(;;)
 {
 	EchoString(connfd);
 }
-*/
+/
 
 printf("EXIT ECHO STRING\n");
 
