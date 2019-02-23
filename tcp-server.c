@@ -150,10 +150,11 @@ registerPlayer(char *playerName,char *ipAddres,char *port)
 }
 
 void
-game_start(int k,char *caller)
+game_start(int k,char *callerAddr)
 {
 	int numPlayers=playerDB_GetSize(playerDB);
-    int callerFound=playerSearch(playerDB,caller);/*
+    int callerFound=playerSearch(playerDB,callerAddr);
+    /*
 	if(numPlayers>=k+1 && callerFound==1 )
 	{
 		selectKplayers
@@ -163,15 +164,16 @@ game_start(int k,char *caller)
 
 }
 
-void selectKplayers(int k)
+void selectKplayers( int k,char *callerAddr)
 {
+    int callerindex=callerIndex(playerDB,callerAddr);
 	int rando;
     int count=0;
 	int flag=0;
 	int used[k]  ;
 	int numPlayers=6;//playerDB_GetSize(playerDB);
 	srand(time(NULL)); // randomize seed
-int i=0;
+    int i=0;
     while (i<k)
 	{
         rando=(rand() % numPlayers);
@@ -179,19 +181,27 @@ int i=0;
 
         flag=0;
 
-        //if(i==0)
-        //{
+
+        if (rando == callerindex)
+        {
+            printf("\nflag=1 not added\n");   
+            flag=1;
+
+        }
+        else if(i==0 )
+        {
             used[i]=rando;
             count++;
             i++;
-        //}
-        //else
+        }
+        else
         {
 		  for(int j=0;j<count;j++)
 		  {
-			if(rando==used[j]  )
+            printf("j=%d\n",j);
+			if(rando==used[j] )
             {
-                printf("\nflag=1\nnot added\n");   
+                printf("\nflag=1 not added\n");   
 				flag=1;
             }
 		}
@@ -228,8 +238,9 @@ main(int argc, char **argv)
     registerPlayer("playerName4","192.168.1.3","3313");
     registerPlayer("playerName9","192.168.1.76","955");
     registerPlayer("playerName7","192.168.1.68","952");
+    selectKplayers( 3,"192.168.1.3");
 
-    printf("callerID =%d\n" ,callerIndex(playerDB,"192.168.1.3"));
+    //printf("callerID =%d\n" ,callerIndex(playerDB,"192.168.1.3"));
 	//selectKplayers(4);
 //int specialindex=callerIndex(playerDB,callerIP);
 
