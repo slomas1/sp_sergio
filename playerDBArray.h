@@ -73,7 +73,7 @@ char* playerDB_List(struct player playerArray[])
 		//printf("playerArray[%d].ip=%s\n",i,playerArray[i].ip );
 		//printf("playerArray[%d].port=%s\n",i,playerArray[i].port );
 	}
-return text;
+	return text;
 //	return rtnPtr;
 }
 
@@ -109,6 +109,6 @@ callerIndex(struct player playerArray[], char *callerIP)
                 callerIndex=i;
         }
     }
-printf("callerIndex=%d\n",callerIndex );
+	printf("callerIndex=%d\n",callerIndex );
     return callerIndex;
 }

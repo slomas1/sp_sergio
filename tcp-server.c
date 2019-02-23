@@ -15,10 +15,15 @@
 
 
 int registerPlayer(char *playerName,char *ipAddres,char *port);
-struct player_query pquery();
+void selectKplayers( int k,int callerindex);
 struct player playerDB[100];
-//struct player gameDB[100];
+struct game gameDB[100];
+struct player tempPlayerDB[100];
+
+struct player_query pquery();
+struct game_init gameInit();
 //char callerIP[16];
+
 void 
 DieWithError(const char *errorMessage) /* External error handling function */
 {
@@ -28,9 +33,9 @@ DieWithError(const char *errorMessage) /* External error handling function */
 
 
 
-//EchoString(int sockfd,struct sockaddr_in Client)
+//EchoString(int sockfd)
 void
-EchoString(int sockfd)
+EchoString(int sockfd,struct sockaddr_in Client)
 {
     ssize_t n;
     char    line[ECHOMAX];
@@ -48,7 +53,7 @@ EchoString(int sockfd)
         readMsg.command[ n ] = '\0';            
 
 //printf("IP address is: %s\n", inet_ntoa(Client.sin_addr));
-  //char *callerIP=inet_ntoa(Client.sin_addr);
+  char *callerIP=inet_ntoa(Client.sin_addr);
 //printf("IP address is: %s\n", callerIP);
        
     printf("Command = %s\n",readMsg.command );
@@ -75,13 +80,7 @@ EchoString(int sockfd)
     }
 
  //*/
-
-
-
             strcpy(line,"Success");
-
-
-
 	//registerPlayer(char *playerName,char *ipAddres,char *port)
         write(sockfd, line, n );
        // write(sockfd, sendMsg, sizeof(message) );
@@ -104,19 +103,14 @@ struct player_query pquery(struct player playerArray[])
         //printf("pDB_ListV\n%s\n",playerDB_List(playerDB) );
      strcpy(newPQ.List,playerDB_List(playerArray) );
         //strcpy(newPQ.List,playerDB_List(playerDB));
-
-
      //strcpy(newPQ.List,"not EMPTY");
         //strcpy(pqList
     //strcat(pqList,'('')');
     
     }
-
-
     //strcpy(newPQ.List,pqList);
     return newPQ;
 }
-
 
 int
 deregisterPlayer(char *playerName)
@@ -149,24 +143,50 @@ registerPlayer(char *playerName,char *ipAddres,char *port)
         return found;
 }
 
-void
-game_start(int k,char *callerAddr)
+struct game_Init  game_start(int k,char *callerAddr,char *callerName)
 {
-	int numPlayers=playerDB_GetSize(playerDB);
-    int callerFound=playerSearch(playerDB,callerAddr);
+	struct game_Init gameInit;
+
+    int numPlayers=playerDB_GetSize(playerDB);
+    int callerFound=playerSearch(playerDB,callerName);
+    int callIndex=callerIndex(playerDB,callerAddr);
+
+    int newid;
+    struct game newGame;
+    printf("numPlayers=%d\n",numPlayers );
+    printf("callerFound=%d\n",callerFound );
     //*
 	if(numPlayers>=k+1 && callerFound==1 )
 	{
-		//selectKplayers
+        printf("Enter IF\n");
+		selectKplayers(k,callIndex);
+        printf("dblist=%s\n", playerDB_List(tempPlayerDB));
+        /*strcpy(newGame.gamePList,playerDB_List(tempPlayerDB));
+        strcpy(newGame.gameID,"69");
+        newGame.caller=playerDB[callIndex];
+
+        strcpy(gameInit.response,newGame.gameID);
+        strcpy(gameInit.participantList,playerDB_List(tempPlayerDB));*/
+
+
 	}
+    else
+    {
+        printf("ELSE\n");
+        strcpy(gameInit.response,newGame.gameID);
+        strcpy(gameInit.participantList,"EMPTY");
+
+    }
+
 	//add game
 //*/
-
+return gameInit;
 }
 
-void selectKplayers( int k,char *callerAddr)
+ void selectKplayers( int k,int callerindex)
 {
-    int callerindex=callerIndex(playerDB,callerAddr);
+
+    //int callerindex=callerIndex(playerDB,callerAddr);
 	int rando;
     int count=0;
 	int flag=0;
@@ -177,16 +197,12 @@ void selectKplayers( int k,char *callerAddr)
     while (i<k)
 	{
         rando=(rand() % numPlayers);
-        printf("rando=%d,count=%d\n", rando,count);
-
+        //printf("rando=%d,count=%d\n", rando,count);
         flag=0;
-
-
         if (rando == callerindex)
         {
-            printf("\nflag=1 not added\n");   
+          //  printf("\nflag=1 not added\n");   
             flag=1;
-
         }
         else if(i==0 )
         {
@@ -198,30 +214,29 @@ void selectKplayers( int k,char *callerAddr)
         {
 		  for(int j=0;j<count;j++)
 		  {
-            printf("j=%d\n",j);
+           //printf("j=%d\n",j);
 			if(rando==used[j] )
             {
-                printf("\nflag=1 not added\n");   
+              // printf("\nflag=1 not added\n");   
 				flag=1;
             }
 		}
         if(flag==0)
         {
-            printf("\nflag=0\n");   
+         //   printf("\nflag=0\n");   
 	       used[i]=rando;
             count++;
             i++;
         }
-
     }
-				
-		
-    	//printf("rand[%d]=%d\n",i, used[i]);
-        /// printf("rand=%d\n", rand()%numPlayers);
 	}
-        for(int i=0;i<k;i++)
+    for(int i=0;i<k;i++)
     {
-    printf("rand[%d]=%d\n",i, used[i]);
+        //tempPlayerDB[i]=playerDB[used[i]];
+        playerDB_Add(tempPlayerDB,playerDB[used[i]]);
+
+    //printf("rand[%d]=%d\n",i, used[i]);
+    //printf("tempPlayerDB[%d]=%s\n",i, tempPlayerDB[i].name);
     }
 	
 }
@@ -230,15 +245,22 @@ int
 main(int argc, char **argv)
 {
    strcpy(playerDB[0].name,"Tail");
+   strcpy(tempPlayerDB[0].name,"Tail");
 //strcpy(callerIP,"192.168.1.3");//delete
 //printf("test\n");
     registerPlayer("playerName3","192.168.1.5","313");
     registerPlayer("playerName1","192.168.1.1","420");
     registerPlayer("playerName2","192.168.1.2","950");
-    registerPlayer("playerName4","192.168.1.3","3313");
+    registerPlayer("Namecaller","192.168.1.3","3313");
     registerPlayer("playerName9","192.168.1.76","955");
     registerPlayer("playerName7","192.168.1.68","952");
-    selectKplayers( 3,"192.168.1.3");
+ //   selectKplayers( 3,3);
+//playerDB_Print(playerDB);
+//printf("\n\n\n\n\n");
+    struct game_Init ginit;
+   ginit=game_start(3,"192.168.1.3","Namecaller");
+   //printf("ginit.response=%s\n",ginit.response);
+   //printf("ginit.participantList=%s\n",ginit.participantList);
 
     //printf("callerID =%d\n" ,callerIndex(playerDB,"192.168.1.3"));
 	//selectKplayers(4);
@@ -248,6 +270,8 @@ main(int argc, char **argv)
 //srand(time(NULL)); // randomize seed
 //for(int i=0;i<size;i++)
  //   printf("rand=%d\n", rand()%size);
+
+
 }
 
 
@@ -314,12 +338,10 @@ printf("declares\n");
 
 
     EchoString(connfd,echoClntAddr);
-/*
-for(;;)
-{
-	EchoString(connfd);
-}
-/
+//
+//for(;;)
+//	EchoString(connfd);
+
 
 printf("EXIT ECHO STRING\n");
 

@@ -1,5 +1,9 @@
-
 /*
+int gameDB_idGen()
+{
+
+
+}
 
 void gameDB_Add(struct player playerArray[],struct player newPlayer)
 {

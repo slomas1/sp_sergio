@@ -7,9 +7,13 @@ struct player {
 struct game {
   char gameID[10];
   struct player caller;
-  char gameList[200];
+  char gamePList[300];
 
 
+};
+struct game_Init {
+  char response[16];// game-ID or Failure
+  char participantList[200];
 };
 
 struct player_query {
