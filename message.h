@@ -3,8 +3,15 @@ struct player {
   char  ip[16];
   char  port[16];
 };
+
 struct game {
+  char gameID[10];
+  struct player caller;
+  char gameList[200];
+
+
 };
+
 struct player_query {
 int 	players;
 char List[200];

@@ -37,25 +37,16 @@ void playerDB_Delete(struct player playerArray[],char *deletePlayer)
 		temp=playerArray[i+1];
 		if(playerDeleted==1)
 		{
-	printf("Player already deleted");
+			printf("Player already deleted");
 			playerArray[i]=temp;
-
 		}
 		if(strcmp(playerArray[i].name,deletePlayer)==0)
 		{
 			printf("playerArray[%d] = %s\n",i,playerArray[i].name);
 			playerArray[i]=temp;
 			playerDeleted=1;
-			
 		}
-		
-		
 	}
-
-
-	//strcpy(playerArray[size+1].name,"Tail");
-	//playerArray[size]=newPlayer;
-	
 }
 
 
@@ -105,3 +96,19 @@ playerSearch(struct player playerDB[], char *playerName)
         return foundPS;//1 is FOUND
 }
 
+int 
+playerIndex(struct player playerDB[], char *playerName)
+{
+	int numPlayers=playerDB_GetSize(playerDB);
+    int callerIndex=0;
+    if (numPlayers>0)
+    {
+    	for(int i=0;i<numPlayers;i++)
+        {
+            if(strcmp(playerDB[i].name,playerName)==0)
+                callerIndex=i;
+        }
+    }
+
+    return callerIndex;
+}

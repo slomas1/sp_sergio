@@ -16,6 +16,7 @@
 int registerPlayer(char *playerName,char *ipAddres,char *port);
 struct player_query pquery();
 struct player playerDB[100];
+struct player gameDB[100];
 //char *pqList[500];
 
 void 
@@ -28,7 +29,7 @@ DieWithError(const char *errorMessage) /* External error handling function */
 
 
 void
-EchoString(int sockfd)
+EchoString(int sockfd,struct sockaddr_in Client)
 {
     ssize_t n;
     char    line[ECHOMAX];
@@ -47,10 +48,13 @@ EchoString(int sockfd)
    //     printf("DEBUG3 \n");
         
         readMsg.command[ n ] = '\0';            
+//printf("IP address is: %s\n", inet_ntoa(Client.sin_addr));
+  char *callerIP=inet_ntoa(Client.sin_addr);
+printf("IP address is: %s\n", callerIP);
        printf("Command = %s\n",readMsg.command );
         printf("arg1 = %s\n",readMsg.arg1 );
 
-
+/*
 	if(strcmp(readMsg.command,"register") == 0 )
 	{
 		if(registerPlayer(readMsg.arg1,readMsg.arg2,readMsg.arg3) == 0)
@@ -70,16 +74,16 @@ EchoString(int sockfd)
           //  write(sockfd, &queryMsg, sizeof(struct player_query) );
     }
 
+ */
 
 
 
-
-
+            strcpy(line,"Success");
 
 
 
 	//registerPlayer(char *playerName,char *ipAddres,char *port)
-  //      write(sockfd, line, n );
+        write(sockfd, line, n );
        // write(sockfd, sendMsg, sizeof(message) );
 }
 
@@ -149,53 +153,82 @@ void
 game_start(int k,char *caller)
 {
 	int numPlayers=playerDB_GetSize(playerDB);
-	if(numPlayers>=k+1)
+    int callerFound=playerSearch(playerDB,caller);/*
+	if(numPlayers>=k+1 && callerFound==1 )
 	{
-		
+		selectKplayers
 	}
 	//add game
-
+*/
 
 }
 
 void selectKplayers(int k)
 {
-	int rand;
+	int rando;
+    int count=0;
 	int flag=0;
-	int used[k];
+	int used[k]  ;
 	int numPlayers=6;//playerDB_GetSize(playerDB);
 	srand(time(NULL)); // randomize seed
-	for(int i=0;i<k;i++)
+int i=0;
+    while (i<k)
 	{
-	//rand=rand()%numPlayers;
-		for(int j=0;j<k;j++)
-		{
-			
-			if(rand=used[j])
-				flag=1;
+        rando=(rand() % numPlayers);
+        printf("rando=%d,count=%d\n", rando,count);
 
+        flag=0;
+
+        //if(i==0)
+        //{
+            used[i]=rando;
+            count++;
+            i++;
+        //}
+        //else
+        {
+		  for(int j=0;j<count;j++)
+		  {
+			if(rando==used[j]  )
+            {
+                printf("\nflag=1\nnot added\n");   
+				flag=1;
+            }
 		}
-	//	used[i];
+        if(flag==0)
+        {
+            printf("\nflag=0\n");   
+	       used[i]=rando;
+            count++;
+            i++;
+        }
+
+    }
 				
 		
-    	///	printf("rand=%d\n", rand()%numPlayers);
+    	//printf("rand[%d]=%d\n",i, used[i]);
+        /// printf("rand=%d\n", rand()%numPlayers);
 	}
+        for(int i=0;i<k;i++)
+    {
+    printf("rand[%d]=%d\n",i, used[i]);
+    }
 	
 }
 
 int
 main(int argc, char **argv)
 {
-	selectKplayers(4);
+//	selectKplayers(4);
 
 
 //	int size=10;
 //srand(time(NULL)); // randomize seed
 //for(int i=0;i<size;i++)
  //   printf("rand=%d\n", rand()%size);
-}
-/*
-    strcpy(playerDB[0].name,"Tail");
+//}
+//*
+ /*   strcpy(playerDB[0].name,"Tail");
     registerPlayer("playerName1","192.168.1.1","420");
     registerPlayer("playerName2","192.168.1.2","950");
     registerPlayer("playerName3","192.168.1.3","313");
@@ -211,6 +244,10 @@ printf("\n\n");
     registerPlayer("playerName5","192.168.1.5","333");
 printf("\n\n");
     playerDB_Print(playerDB);
+   */
+
+
+
     int sock, connfd;                
     struct sockaddr_in echoServAddr;
     struct sockaddr_in echoClntAddr;
@@ -246,12 +283,19 @@ printf("\n\n");
 	cliAddrLen = sizeof(echoClntAddr);
 	connfd = accept( sock, (struct sockaddr *) &echoClntAddr, &cliAddrLen );
 
+//printf("IP address is: %s\n", inet_ntoa(echoClntAddr.sin_addr));
+//printf("port is: %d\n", (int) ntohs(echoClntAddr.sin_port));
 
+
+    EchoString(connfd,echoClntAddr);
+/*
 for(;;)
 {
 	EchoString(connfd);
 }
-printf("EXIT ECHOSTRING");
+*/
+
+printf("EXIT ECHO STRING\n");
 
 	close(connfd);
 char str[50];
