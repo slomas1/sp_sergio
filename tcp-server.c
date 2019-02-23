@@ -4,6 +4,7 @@
 #include	<arpa/inet.h>	/* for sockaddr_in and inet_ntoa() */
 #include	<sys/types.h>
 #include    <string.h>
+#include    <time.h>
 #include	<unistd.h>
 #include    "message.h"
 #include    "playerDBArray.h"
@@ -59,7 +60,7 @@ EchoString(int sockfd)
 	}
 	if(strcmp(readMsg.command,"query players") == 0 )
 	{
-		queryMsg=pquery();
+		queryMsg=pquery(playerDB);
        	 	write(sockfd, &queryMsg, sizeof(struct player_query) );
 	}
     if(strcmp(readMsg.command,"start game") == 0 )
@@ -83,11 +84,11 @@ EchoString(int sockfd)
 }
 
 
-struct player_query 
-pquery()
+//struct player_query pquery()
+struct player_query pquery(struct player playerArray[])
 {
     struct player_query newPQ;
-    int numPlayers=playerDB_GetSize(playerDB);
+    int numPlayers=playerDB_GetSize(playerArray);
     char pqList[200];
 
     newPQ.players=numPlayers;
@@ -97,7 +98,7 @@ pquery()
     else
     {
         //printf("pDB_ListV\n%s\n",playerDB_List(playerDB) );
-     strcpy(newPQ.List,playerDB_List(playerDB) );
+     strcpy(newPQ.List,playerDB_List(playerArray) );
         //strcpy(newPQ.List,playerDB_List(playerDB));
 
 
@@ -144,9 +145,56 @@ registerPlayer(char *playerName,char *ipAddres,char *port)
         return found;
 }
 
+void
+game_start(int k,char *caller)
+{
+	int numPlayers=playerDB_GetSize(playerDB);
+	if(numPlayers>=k+1)
+	{
+		
+	}
+	//add game
+
+
+}
+
+void selectKplayers(int k)
+{
+	int rand;
+	int flag=0;
+	int used[k];
+	int numPlayers=6;//playerDB_GetSize(playerDB);
+	srand(time(NULL)); // randomize seed
+	for(int i=0;i<k;i++)
+	{
+	//rand=rand()%numPlayers;
+		for(int j=0;j<k;j++)
+		{
+			
+			if(rand=used[j])
+				flag=1;
+
+		}
+	//	used[i];
+				
+		
+    	///	printf("rand=%d\n", rand()%numPlayers);
+	}
+	
+}
+
 int
 main(int argc, char **argv)
 {
+	selectKplayers(4);
+
+
+//	int size=10;
+//srand(time(NULL)); // randomize seed
+//for(int i=0;i<size;i++)
+ //   printf("rand=%d\n", rand()%size);
+}
+/*
     strcpy(playerDB[0].name,"Tail");
     registerPlayer("playerName1","192.168.1.1","420");
     registerPlayer("playerName2","192.168.1.2","950");
@@ -163,8 +211,6 @@ printf("\n\n");
     registerPlayer("playerName5","192.168.1.5","333");
 printf("\n\n");
     playerDB_Print(playerDB);
-}
-/*
     int sock, connfd;                
     struct sockaddr_in echoServAddr;
     struct sockaddr_in echoClntAddr;
