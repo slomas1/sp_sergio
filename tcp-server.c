@@ -122,7 +122,7 @@ int
 deregisterPlayer(char *playerName)
 {
     //player
-	//playerDB_Delete(playerDB,playerName);
+	playerDB_Delete(playerDB,playerName);
 	return 1;
 }
 
@@ -154,13 +154,13 @@ game_start(int k,char *callerAddr)
 {
 	int numPlayers=playerDB_GetSize(playerDB);
     int callerFound=playerSearch(playerDB,callerAddr);
-    /*
+    //*
 	if(numPlayers>=k+1 && callerFound==1 )
 	{
-		selectKplayers
+		//selectKplayers
 	}
 	//add game
-*/
+//*/
 
 }
 
