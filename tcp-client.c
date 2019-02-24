@@ -69,7 +69,7 @@ str_cli( int sockfd)
        			write(sockfd, &msg, sizeof(struct message));
        			if ( (n = read(sockfd, &gamemsg,sizeof(struct game_Init) )) == 0)
             		DieWithError("str_cli: server terminated prematurely"); 
-                printf("\nResponse from server:%s\nPlayers:%s\n",gamemsg.response,gamemsg.participantList);
+                printf("\nGame Identifier from server:%s\nPlayers:\n%s\n",gamemsg.response,gamemsg.participantList);
 
        		}
        		else if(strncmp(msg.command,"querygames",10)==0)
@@ -77,7 +77,7 @@ str_cli( int sockfd)
             	write(sockfd, &msg, sizeof(struct message));
             	if ( (n = read(sockfd, &gqmsg,sizeof(struct player_query) )) == 0)
             		DieWithError("str_cli: server terminated prematurely"); 
-                printf("\nResponse from server:\nNumber of games:%d\nGames:%s\n",gqmsg.numGames,gqmsg.gameList);
+                printf("\nResponse from server:\nNumber of games:%d\nGames:\n%s\n",gqmsg.numGames,gqmsg.gameList);
 
        		}
        		else if(strcmp(msg.command,"exit")==0)

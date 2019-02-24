@@ -37,14 +37,12 @@ DieWithError(const char *errorMessage) /* External error handling function */
 }
 
 
-
-//EchoString(int sockfd)
 void
-EchoString(int sockfd,struct sockaddr_in Client)
+msgController(int sockfd,struct sockaddr_in Client)
 {
     ssize_t n;
     char line[ECHOMAX];
-    char *callerIP="192.168.1.3";//inet_ntoa(Client.sin_addr);
+    char *callerIP=inet_ntoa(Client.sin_addr);
     char callersName[25];
 
     struct message readMsg;
@@ -83,12 +81,13 @@ EchoString(int sockfd,struct sockaddr_in Client)
         int k=atoi(readMsg.arg1);
         strcpy(callersName,caller_Name(playerDB,callerIP));
         gameMsg=game_start(k,callerIP,callersName);
+        //printf("gamemsg.participantList%s\n",gameMsg.participantList );
         write(sockfd, &gameMsg, sizeof(struct game_Init) );
     }
     if(strcmp(readMsg.command,"querygames") == 0 )
     {
         gqueryMsg=gquery();
-        printf("gquerymsg numbers of  games = %d\n",gqueryMsg.numGames);
+        printf("gquerymsg numbers of games = %d\n",gqueryMsg.numGames);
 
         write(sockfd, &gqueryMsg, sizeof(struct game_query) );
     }
@@ -125,14 +124,15 @@ struct game_query gquery()
 
     newGQ.numGames=num_games;
     //printf("gquery entered\n");
-    printf("games=%d\n", num_games);
+    printf("gquery->games=%d\n", num_games);
     if (num_games==0)
     {
         strcpy(newGQ.gameList,"EMPTY");
     
-}
+    }
     else
         strcpy(newGQ.gameList,gameDB_List(gameDB));
+
         //printf("printlist:%s",gameDB_List(gameDB));
         
         //strcpy(newGQ.gameList,playerDB_List(playerDB));
@@ -198,9 +198,12 @@ struct game_Init  game_start(int k,char *callerAddr,char *callerName)
         strcpy(newGame.gamePList,playerDB_List(tempPlayerDB));
         strcpy(newGame.gameID,newid);//FIX THIS
         newGame.caller=playerDB[callIndex];
+        gameDB_Add(gameDB,newGame);
 
         strcpy(gameInit.response,newGame.gameID);
         strcpy(gameInit.participantList,playerDB_List(tempPlayerDB));
+        tempDB_Delete(tempPlayerDB);
+
 
 
 	}
@@ -309,6 +312,7 @@ main(int argc, char **argv)
 
  
     registerPlayer("playerName3","192.168.1.5","313");
+    registerPlayer("localhost","127.0.0.1","3413");
     registerPlayer("playerName3","192.168.1.1","420");
     registerPlayer("playerName2","192.168.1.2","950");
     registerPlayer("Namecaller","192.168.1.3","3313");
@@ -318,7 +322,7 @@ main(int argc, char **argv)
 //printf("\n\n\n\n\n");
 
 
-//*   
+/*   
 //   struct game_Init ginit;
 //   ginit=game_start(3,"192.168.1.3","Namecaller");
    //printf("ginit.response=%s\n",ginit.response);
@@ -363,15 +367,16 @@ printf("\n\n\n\n\n");
 
 
 //*/
+
 //struct game_query testgq;
 //    gquery();
-printf("\n\n\n\n\n");
+//printf("\n\n\n\n\n");
 //printf("numgames=%d\n",testgq.numGames);
-printf("numgames=%d\n",gquery().numGames);
+//printf("numgames=%d\n",gquery().numGames);
 
 
 
- }  /*/UNCOMMENT FOR DEBUG
+ //}  /*/UNCOMMENT FOR DEBUG
 
 
 
@@ -417,14 +422,10 @@ printf("numgames=%d\n",gquery().numGames);
 
 for(;;)
 {
-    EchoString(connfd,echoClntAddr);
-//
-//	EchoString(connfd);
+    msgController(connfd,echoClntAddr);
 
 
 printf("EXIT ECHO STRING\n");
-//    if ( (n = read(sockfd, &readMsg, sizeof(struct message))) == 0 )
-//        exit(0);
 
 }
 	close(connfd);

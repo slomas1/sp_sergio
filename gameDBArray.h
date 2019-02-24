@@ -57,7 +57,7 @@ void gameDB_Delete(struct game gameArray[],char *deleteGameID)
 char* gameDB_List(struct game gameArray[])
 {
 	char *gtext=malloc(400*sizeof(char));
-	strcpy(gtext,"LIST:");
+	strcpy(gtext,"");
 	int size=gameDB_GetSize(gameArray);
 	for(int i=0;i<size;i++)
 	{
@@ -65,13 +65,13 @@ char* gameDB_List(struct game gameArray[])
 		strcat(gtext,gameArray[i].gameID);
 		strcat(gtext,",");
 		strcat(gtext,gameArray[i].caller.name);
-		strcat(gtext,",");
+		strcat(gtext,",\n");
 		strcat(gtext,gameArray[i].gamePList);
 		strcat(gtext,")");
 		if(i!=size-1)
 		{
 		//printf("if\n");
-			strcat(gtext,",");
+			strcat(gtext,"\n\n");
 		}
 
 	}

@@ -55,7 +55,7 @@ void playerDB_Delete(struct player playerArray[],char *deletePlayer)
 char* playerDB_List(struct player playerArray[])
 {
 	char *text=malloc(400*sizeof(char));
-	strcpy(text,"LIST:");
+	strcpy(text,"");
 	int size=playerDB_GetSize(playerArray);
 	for(int i=0;i<size;i++)
 	{
@@ -67,7 +67,7 @@ char* playerDB_List(struct player playerArray[])
 		strcat(text,playerArray[i].port);
 		strcat(text,")");
 		if(i!=size-1)
-			strcat(text,",");
+			strcat(text,"\n");
 
 		//printf("playerArray[%d].name=%s\n",i,playerArray[i].name );
 		//printf("playerArray[%d].ip=%s\n",i,playerArray[i].ip );
@@ -125,4 +125,9 @@ char *caller_Name(struct player playerArray[], char *callerIP)
         }
     }
     return cName;
+}
+
+void tempDB_Delete(struct player playerArray[])
+{
+   strcpy(playerArray[0].name,"Tail");
 }
