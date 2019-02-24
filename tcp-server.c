@@ -267,7 +267,9 @@ main(int argc, char **argv)
 //playerDB_Print(playerDB);
 //printf("\n\n\n\n\n");
 
-    struct game_Init ginit;
+
+/*    
+   struct game_Init ginit;
    ginit=game_start(3,"192.168.1.3","Namecaller");
    printf("ginit.response=%s\n",ginit.response);
    printf("ginit.participantList=%s\n",ginit.participantList);
@@ -276,12 +278,12 @@ main(int argc, char **argv)
    strcpy(testGame.gameID,"testID");
    testGame.caller=playerDB[3];
    strcpy(testGame.gamePList,ginit.participantList);
-//*
+//
    struct game testGame2;
    strcpy(testGame2.gameID,"testID_2");
    testGame2.caller=playerDB[4];
    strcpy(testGame2.gamePList,"participantList2");
-//*
+//
    struct game testGame3;
    strcpy(testGame3.gameID,"testID_3");
    testGame3.caller=playerDB[1];
@@ -307,11 +309,11 @@ printf("\n\n\n\n\n");
 
 printf("\n\n\n\n\n");
    gameDB_Print(gameDB);
+*/
 
 
 
-
-}
+//}//UNCOMMENT FOR DEBUG
 
 
 
@@ -333,7 +335,7 @@ printf("\n\n");
     playerDB_Print(playerDB);
 //   */
 
-/*
+//*
 
     int sock, connfd;                
     struct sockaddr_in echoServAddr;
@@ -345,7 +347,6 @@ printf("\n\n");
 
     struct message client_message;
 
-printf("declares\n");
     if (argc != 2)         
     {
         fprintf(stderr,"Usage: %s <TDP SERVER PORT>\n", argv[0]);
@@ -376,19 +377,17 @@ printf("declares\n");
 //printf("port is: %d\n", (int) ntohs(echoClntAddr.sin_port));
 
 
+for(;;)
+{
     EchoString(connfd,echoClntAddr);
 //
-//for(;;)
 //	EchoString(connfd);
 
 
 printf("EXIT ECHO STRING\n");
 
+}
 	close(connfd);
-char str[50];
-strcpy(str,"test");
-    //printf("registered players = %d",registerPlayer(str));
-	//playerSearch(str);
 }
 //*/
 
