@@ -5,7 +5,7 @@ struct player {
 };
 
 struct game {
-  char gameID[10];
+  char gameID[20];
   struct player caller;
   char gamePList[400];
 

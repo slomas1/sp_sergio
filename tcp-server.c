@@ -17,7 +17,7 @@
 int registerPlayer(char *playerName,char *ipAddres,char *port);
 void selectKplayers( int k,int callerindex);
 struct game_Init  game_start(int k,char *callerAddr,char *callerName);
-
+int getID();
 
 
 struct player playerDB[100];
@@ -125,7 +125,7 @@ struct game_query gquery()
 
     newGQ.numGames=num_games;
     //printf("gquery entered\n");
-    
+    printf("games=%d\n", num_games);
     if (num_games==0)
     {
         strcpy(newGQ.gameList,"EMPTY");
@@ -187,7 +187,8 @@ struct game_Init  game_start(int k,char *callerAddr,char *callerName)
     int callerFound=playerSearch(playerDB,callerName);
     int callIndex=callerIndex(playerDB,callerAddr);
 
-    int newid;
+    char newid[20];
+    sprintf(newid,"%d",getID());
     struct game newGame;
     //*
 	if(numPlayers>=k+1 && callerFound==1 )
@@ -195,7 +196,7 @@ struct game_Init  game_start(int k,char *callerAddr,char *callerName)
 		selectKplayers(k,callIndex);
         //printf("dblist=%s\n", playerDB_List(tempPlayerDB));
         strcpy(newGame.gamePList,playerDB_List(tempPlayerDB));
-        strcpy(newGame.gameID,"69");//FIX THIS
+        strcpy(newGame.gameID,newid);//FIX THIS
         newGame.caller=playerDB[callIndex];
 
         strcpy(gameInit.response,newGame.gameID);
@@ -216,7 +217,31 @@ struct game_Init  game_start(int k,char *callerAddr,char *callerName)
 return gameInit;
 }
 
- void selectKplayers( int k,int callerindex)
+int getID()
+{
+    int rando;
+    //int k=20;
+    int count=0;
+    int flag=1;
+    int totalGames=gameDB_GetSize(gameDB);
+    srand(time(NULL)); // randomize seed
+    int i=0;
+    while (flag==1)
+    {   
+        rando=(rand() % 100);
+        flag=0;
+        for(int i=0;i<totalGames;i++)
+        {
+            if(atoi(gameDB[i].gameID) == rando)
+                flag=1;
+        }   
+    }
+
+    return rando;
+
+}
+
+void selectKplayers( int k,int callerindex)
 {
 
     //int callerindex=callerIndex(playerDB,callerAddr);
@@ -224,7 +249,7 @@ return gameInit;
     int count=0;
 	int flag=0;
 	int used[k]  ;
-	int numPlayers=6;//playerDB_GetSize(playerDB);
+	int numPlayers=playerDB_GetSize(playerDB);
 	srand(time(NULL)); // randomize seed
     int i=0;
     while (i<k)
@@ -293,29 +318,29 @@ main(int argc, char **argv)
 //printf("\n\n\n\n\n");
 
 
-/*   
+//*   
 //   struct game_Init ginit;
 //   ginit=game_start(3,"192.168.1.3","Namecaller");
    //printf("ginit.response=%s\n",ginit.response);
    //printf("ginit.participantList=%s\n",ginit.participantList);
 
    struct game testGame;
-   strcpy(testGame.gameID,"testID");
+   strcpy(testGame.gameID,"0");
    testGame.caller=playerDB[3];
-   strcpy(testGame.gamePList,ginit.participantList);
+   strcpy(testGame.gamePList,"ginit.participantList");
 //
    struct game testGame2;
-   strcpy(testGame2.gameID,"testID_2");
+   strcpy(testGame2.gameID,"2");
    testGame2.caller=playerDB[4];
    strcpy(testGame2.gamePList,"participantList2");
 //
    struct game testGame3;
-   strcpy(testGame3.gameID,"testID_3");
+   strcpy(testGame3.gameID,"3");
    testGame3.caller=playerDB[1];
    strcpy(testGame3.gamePList,"participantList3");
 
    struct game testGame4;
-   strcpy(testGame4.gameID,"testID_4");
+   strcpy(testGame4.gameID,"4");
    testGame4.caller=playerDB[0];
    strcpy(testGame4.gamePList,"participantList4");
 
@@ -336,17 +361,19 @@ printf("\n\n\n\n\n");
    //printf("\n\nPRINTING\n");
    //gameDB_Print(gameDB);
 
-   
+
 //*/
 //struct game_query testgq;
 //    gquery();
 printf("\n\n\n\n\n");
 //printf("numgames=%d\n",testgq.numGames);
+printf("numgames=%d\n",gquery().numGames);
 
 
-//}//UNCOMMENT FOR DEBUG
 
-//*
+ }  /*/UNCOMMENT FOR DEBUG
+
+
 
     int sock, connfd;                
     struct sockaddr_in echoServAddr;
