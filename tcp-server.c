@@ -143,6 +143,11 @@ registerPlayer(char *playerName,char *ipAddres,char *port)
         return found;
 }
 
+int game_End(char *gameIdentifier,char *callerAddr)
+{
+return 0;
+}
+
 struct game_Init  game_start(int k,char *callerAddr,char *callerName)
 {
 	struct game_Init gameInit;
@@ -153,20 +158,17 @@ struct game_Init  game_start(int k,char *callerAddr,char *callerName)
 
     int newid;
     struct game newGame;
-    printf("numPlayers=%d\n",numPlayers );
-    printf("callerFound=%d\n",callerFound );
     //*
 	if(numPlayers>=k+1 && callerFound==1 )
 	{
-        printf("Enter IF\n");
 		selectKplayers(k,callIndex);
-        printf("dblist=%s\n", playerDB_List(tempPlayerDB));
-        /*strcpy(newGame.gamePList,playerDB_List(tempPlayerDB));
+        //printf("dblist=%s\n", playerDB_List(tempPlayerDB));
+        strcpy(newGame.gamePList,playerDB_List(tempPlayerDB));
         strcpy(newGame.gameID,"69");
         newGame.caller=playerDB[callIndex];
 
         strcpy(gameInit.response,newGame.gameID);
-        strcpy(gameInit.participantList,playerDB_List(tempPlayerDB));*/
+        strcpy(gameInit.participantList,playerDB_List(tempPlayerDB));
 
 
 	}
@@ -245,31 +247,68 @@ int
 main(int argc, char **argv)
 {
    strcpy(playerDB[0].name,"Tail");
+   strcpy(gameDB[0].gameID,"Tail");
    strcpy(tempPlayerDB[0].name,"Tail");
+
+
+
+
 //strcpy(callerIP,"192.168.1.3");//delete
 //printf("test\n");
+ 
     registerPlayer("playerName3","192.168.1.5","313");
     registerPlayer("playerName1","192.168.1.1","420");
     registerPlayer("playerName2","192.168.1.2","950");
     registerPlayer("Namecaller","192.168.1.3","3313");
     registerPlayer("playerName9","192.168.1.76","955");
     registerPlayer("playerName7","192.168.1.68","952");
+ 
  //   selectKplayers( 3,3);
 //playerDB_Print(playerDB);
 //printf("\n\n\n\n\n");
+
     struct game_Init ginit;
    ginit=game_start(3,"192.168.1.3","Namecaller");
-   //printf("ginit.response=%s\n",ginit.response);
-   //printf("ginit.participantList=%s\n",ginit.participantList);
+   printf("ginit.response=%s\n",ginit.response);
+   printf("ginit.participantList=%s\n",ginit.participantList);
 
-    //printf("callerID =%d\n" ,callerIndex(playerDB,"192.168.1.3"));
-	//selectKplayers(4);
-//int specialindex=callerIndex(playerDB,callerIP);
+   struct game testGame;
+   strcpy(testGame.gameID,"testID");
+   testGame.caller=playerDB[3];
+   strcpy(testGame.gamePList,ginit.participantList);
+//*
+   struct game testGame2;
+   strcpy(testGame2.gameID,"testID_2");
+   testGame2.caller=playerDB[4];
+   strcpy(testGame2.gamePList,"participantList2");
+//*
+   struct game testGame3;
+   strcpy(testGame3.gameID,"testID_3");
+   testGame3.caller=playerDB[1];
+   strcpy(testGame3.gamePList,"ginit.participantList3");
 
-//	int size=10;
-//srand(time(NULL)); // randomize seed
-//for(int i=0;i<size;i++)
- //   printf("rand=%d\n", rand()%size);
+   struct game testGame4;
+   strcpy(testGame4.gameID,"testID_4");
+   testGame4.caller=playerDB[0];
+   strcpy(testGame4.gamePList,"ginit.participantList4");
+
+printf("\n\n\n\n\n");
+   gameDB_Add(gameDB,testGame);
+   gameDB_Add(gameDB,testGame2);
+   gameDB_Add(gameDB,testGame3);
+   
+   gameDB_Print(gameDB);
+   
+    gameDB_Delete(gameDB,"testID_2");
+printf("\n\n\n\n\n");
+   gameDB_Print(gameDB);
+
+   gameDB_Add(gameDB,testGame4);
+
+printf("\n\n\n\n\n");
+   gameDB_Print(gameDB);
+
+
 
 
 }

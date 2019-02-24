@@ -109,6 +109,6 @@ callerIndex(struct player playerArray[], char *callerIP)
                 callerIndex=i;
         }
     }
-	printf("callerIndex=%d\n",callerIndex );
+	//printf("callerIndex=%d\n",callerIndex );
     return callerIndex;
 }
