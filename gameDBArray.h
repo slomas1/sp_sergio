@@ -53,40 +53,36 @@ void gameDB_Delete(struct game gameArray[],char *deleteGameID)
 	//strcpy(gameArray[size+1].name,"Tail");
 	//gameArray[size]=newPlayer;
 }
+
+char* gameDB_List(struct game gameArray[])
+{
+	char *gtext=malloc(400*sizeof(char));
+	strcpy(gtext,"LIST:");
+	int size=gameDB_GetSize(gameArray);
+	for(int i=0;i<size;i++)
+	{
+		strcat(gtext,"(");
+		strcat(gtext,gameArray[i].gameID);
+		strcat(gtext,",");
+		strcat(gtext,gameArray[i].caller.name);
+		strcat(gtext,",");
+		strcat(gtext,gameArray[i].gamePList);
+		strcat(gtext,")");
+		if(i!=size-1)
+		{
+		//printf("if\n");
+			strcat(gtext,",");
+		}
+
+	}
+	return gtext;
+}
 /*
 int gameDB_idGen()
 {
 
 
 }
-
-
-//void gameDB_List(struct game gameArray[])
-char* gameDB_List(struct game gameArray[])
-{
-	char *text=malloc(100*sizeof(char));
-	strcpy(text,"LIST:");
-	int size=gameDB_GetSize(gameArray);
-	for(int i=0;i<size;i++)
-	{
-		strcat(text,"(");
-		strcat(text,gameArray[i].name);
-		strcat(text,",");
-		strcat(text,gameArray[i].ip);
-		strcat(text,",");
-		strcat(text,gameArray[i].port);
-		strcat(text,")");
-		if(i!=size-1)
-			strcat(text,",");
-
-		//printf("gameArray[%d].name=%s\n",i,gameArray[i].name );
-		//printf("gameArray[%d].ip=%s\n",i,gameArray[i].ip );
-		//printf("gameArray[%d].port=%s\n",i,gameArray[i].port );
-	}
-return text;
-//	return rtnPtr;
-}
-
 
 
 //*/

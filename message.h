@@ -7,7 +7,7 @@ struct player {
 struct game {
   char gameID[10];
   struct player caller;
-  char gamePList[300];
+  char gamePList[400];
 
 
 };
@@ -18,13 +18,12 @@ struct game_Init {
 
 struct player_query {
 int 	players;
-char List[200];
+char List[400];
 };
 
 struct game_query {
-  char  name[50];
-  char  ip[16];
-  char  port[16];
+  int  numGames;
+  char  gameList[400];
 };
 struct message {
   char  command[50];

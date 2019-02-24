@@ -25,36 +25,71 @@ void
 str_cli( int sockfd)
 {
 	ssize_t n;
-        char    sendline[ECHOMAX], recvline[ECHOMAX];
-        char recline[10];
+    char    sendline[ECHOMAX], recvline[ECHOMAX];
 	struct player_query qmsg;
+	struct game_query gqmsg;
+	struct game_Init gamemsg;
 	struct message msg;
 	char cmd;
 
        //while (fgets(sendline, ECHOMAX, fp) != NULL) 
 	   	for(;;)
        	{
-       		printf("Command: ");
+       		printf("\nCommand: ");
        		scanf("%s",msg.command);
-
-
-
 			//sendline[ n ] = '\0';
        		//printf("comparison = %d\n",strncmp(sendline,recvline,9));
        		if(strncmp(msg.command,"register",9)==0)
        		{
-       			//scanf("%s",msg.command);
-       			printf("Name: ");
+       			printf("Player Name: ");
        			scanf("%s",msg.arg1);
        			printf("IP Address: ");
        			scanf("%s",msg.arg2);
        			printf("Port: ");
        			scanf("%s",msg.arg3);
-
-       			
             	write(sockfd, &msg, sizeof(struct message));
+
+            	if ( (n = read(sockfd, recvline, ECHOMAX)) == 0)
+            		DieWithError("str_cli: server terminated prematurely");
+               
+                printf("\nResponse from server:%s\n",recvline);
        		}
-       		printf("cmd:%s\narg1:%s\narg2:%s\narg3:%s\n", msg.command,msg.arg1,msg.arg2,msg.arg3);
+       		else if(strncmp(msg.command,"queryplayers",12)==0)
+       		{
+            	write(sockfd, &msg, sizeof(struct message));
+
+            	if ( (n = read(sockfd, &qmsg,sizeof(struct player_query) )) == 0)
+            		DieWithError("str_cli: server terminated prematurely"); 
+                printf("\nResponse from server:\nNumber of players:%d\nPlayers:%s\n",qmsg.players,qmsg.List);
+       		}
+       		else if(strncmp(msg.command,"startgame",9)==0)
+       		{
+       			printf("K Players: ");
+       			scanf("%s",msg.arg1);
+       			write(sockfd, &msg, sizeof(struct message));
+       			if ( (n = read(sockfd, &gamemsg,sizeof(struct game_Init) )) == 0)
+            		DieWithError("str_cli: server terminated prematurely"); 
+                printf("\nResponse from server:%s\nPlayers:%s\n",gamemsg.response,gamemsg.participantList);
+
+       		}
+       		else if(strncmp(msg.command,"querygames",10)==0)
+       		{
+            	write(sockfd, &msg, sizeof(struct message));
+            	if ( (n = read(sockfd, &gqmsg,sizeof(struct player_query) )) == 0)
+            		DieWithError("str_cli: server terminated prematurely"); 
+                printf("\nResponse from server:\nNumber of games:%d\nGames:%s\n",gqmsg.numGames,gqmsg.gameList);
+
+       		}
+       		else if(strcmp(msg.command,"exit")==0)
+       		{
+       			write(sockfd, &msg, sizeof(struct message));
+       			exit(0);
+       		}
+       		else
+       			printf("Not Recognized\n");
+
+
+       		//printf("cmd:%s\narg1:%s\narg2:%s\narg3:%s\n", msg.command,msg.arg1,msg.arg2,msg.arg3);
 
 
 
@@ -87,6 +122,7 @@ str_cli( int sockfd)
         //}
 }
 
+
 void peer_talk()
 {
 
@@ -107,28 +143,8 @@ main(int argc, char **argv)
 	servaddr.sin_family = AF_INET;
 	servaddr.sin_port = htons(atoi(argv[2]));
 	inet_pton(AF_INET, argv[1], &servaddr.sin_addr);
-
-	connect(sockfd, (struct sockaddr *) &servaddr, sizeof(servaddr));
-//*
-	strcpy(in_msg.command,"register");
-	strcpy(in_msg.arg1,"Sergio");
-	strcpy(in_msg.arg2,"192.168.1.69");
-	strcpy(in_msg.arg3,"6969");
-	//str_cli(in_msg, sockfd);
-	//manager_talk(in_msg, sockfd);	
-	strcpy(in_msg.command,"register");
-	strcpy(in_msg.arg1,"Goofy");
-	strcpy(in_msg.arg2,"192.168.1.70");
-	strcpy(in_msg.arg3,"6967");
-	//str_cli(in_msg, sockfd);
-//*/
-//	strcpy(in_msg.command,"query players");
-//	strcpy(in_msg.arg1,"");
-//	strcpy(in_msg.arg2,"");
-//	strcpy(in_msg.arg3,"");
-	//manager_talk(in_msg, sockfd);	
-	//str_cli(in_msg, sockfd);	
-	//str_cli(stdin, sockfd);		
+	connect(sockfd, (struct sockaddr *) &servaddr, sizeof(servaddr));	
+	
 	str_cli(sockfd);		
 
 	exit(0);
