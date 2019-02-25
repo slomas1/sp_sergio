@@ -76,7 +76,6 @@ msgController(int sockfd,struct sockaddr_in Client)
         int k=atoi(readMsg.arg1);
         strcpy(callersName,caller_Name(playerDB,callerIP));
         gameMsg=game_start(k,callerIP,callersName);
-        //printf("gamemsg.participantList%s\n",gameMsg.participantList );
         write(sockfd, &gameMsg, sizeof(struct game_Init) );
     }
     if(strcmp(readMsg.command,"querygames") == 0 )
@@ -88,16 +87,27 @@ msgController(int sockfd,struct sockaddr_in Client)
     }
     if(strcmp(readMsg.command,"end") == 0 )
     {
-        gameDB_Delete(gameDB,readMsg.arg1);
-        strcpy(line,"Success");
+        if(gameDB_exists(gameDB,readMsg.arg1)==1)
+        {
+            gameDB_Delete(gameDB,readMsg.arg1);
+            strcpy(line,"Success");
+        }
+        else
+            strcpy(line,"FAILURE");
+
         write(sockfd, line, n );
     }
 
     if(strcmp(readMsg.command,"deregister") == 0 )
     {
-            
-        strcpy(line,"Success");
-        playerDB_Delete(playerDB,readMsg.arg1);
+        if(playerSearch(playerDB,readMsg.arg1)==1) 
+        {
+            playerDB_Delete(playerDB,readMsg.arg1);
+            strcpy(line,"Success");
+        }
+        else
+            strcpy(line,"FAILURE");
+
         write(sockfd, line, n );
     }
     if(strcmp(readMsg.command,"exit") == 0 )
@@ -142,7 +152,6 @@ struct game_query gquery()
 int
 deregisterPlayer(char *playerName)
 {
-    //player
 	playerDB_Delete(playerDB,playerName);
 	return 1;
 }
@@ -151,7 +160,6 @@ deregisterPlayer(char *playerName)
 int
 registerPlayer(char *playerName,char *ipAddres,char *port)
 {
-    //printf("Entered registerPlayer\n");
     struct player newPlayer;
     strcpy(newPlayer.name,playerName);
     strcpy(newPlayer.ip,ipAddres);
@@ -159,14 +167,10 @@ registerPlayer(char *playerName,char *ipAddres,char *port)
 
     int found=0;
     found=playerSearch(playerDB,playerName);
-    //found=playerSearch(playerName);
-    //printf("found= %d\n",found);
     if(found!=1)
     {
         playerDB_Add(playerDB,newPlayer);
     }
-
-
         return found;
 }
 
@@ -200,7 +204,7 @@ struct game_Init  game_start(int k,char *callerAddr,char *callerName)
 	}
     else
     {
-        strcpy(gameInit.response,newGame.gameID);
+        strcpy(gameInit.response,"FAILURE");
         strcpy(gameInit.participantList,"EMPTY");
 
     }
@@ -211,7 +215,6 @@ struct game_Init  game_start(int k,char *callerAddr,char *callerName)
 int getID()
 {
     int rando;
-    //int k=20;
     int count=0;
     int flag=1;
     int totalGames=gameDB_GetSize(gameDB);
@@ -298,7 +301,7 @@ main(int argc, char **argv)
    strcpy(tempPlayerDB[0].name,"Tail");
 
 
- 
+ /*
     registerPlayer("playerName3","192.168.1.5","313");
     registerPlayer("localhost","127.0.0.1","3413");
     registerPlayer("playerName3","192.168.1.1","420");
@@ -306,67 +309,8 @@ main(int argc, char **argv)
     registerPlayer("Namecaller","192.168.1.3","3313");
     registerPlayer("playerName9","192.168.1.76","955");
     registerPlayer("playerName7","192.168.1.68","952");
- 
-//printf("\n\n\n\n\n");
-
-
-/*   
-//   struct game_Init ginit;
-//   ginit=game_start(3,"192.168.1.3","Namecaller");
-   //printf("ginit.response=%s\n",ginit.response);
-   //printf("ginit.participantList=%s\n",ginit.participantList);
-
-   struct game testGame;
-   strcpy(testGame.gameID,"0");
-   testGame.caller=playerDB[3];
-   strcpy(testGame.gamePList,"ginit.participantList");
-//
-   struct game testGame2;
-   strcpy(testGame2.gameID,"2");
-   testGame2.caller=playerDB[4];
-   strcpy(testGame2.gamePList,"participantList2");
-//
-   struct game testGame3;
-   strcpy(testGame3.gameID,"3");
-   testGame3.caller=playerDB[1];
-   strcpy(testGame3.gamePList,"participantList3");
-
-   struct game testGame4;
-   strcpy(testGame4.gameID,"4");
-   testGame4.caller=playerDB[0];
-   strcpy(testGame4.gamePList,"participantList4");
-
-printf("\n\n\n\n\n");
-   gameDB_Add(gameDB,testGame);
-   gameDB_Add(gameDB,testGame2);
-   gameDB_Add(gameDB,testGame3);
-   
-//   gameDB_Print(gameDB);
-   
-//    gameDB_Delete(gameDB,"testID_2");
-//printf("\n\n\n\n\n");
-//  gameDB_Print(gameDB);
-
-   gameDB_Add(gameDB,testGame4);
-
-//printf("\n\n\n\n\n");
-   //printf("\n\nPRINTING\n");
-   //gameDB_Print(gameDB);
-
-
-//*/
-
-//struct game_query testgq;
-//    gquery();
-//printf("\n\n\n\n\n");
-//printf("numgames=%d\n",testgq.numGames);
-//printf("numgames=%d\n",gquery().numGames);
-
-
-
+ */
  //}  /*/UNCOMMENT FOR DEBUG
-
-
 
     int sock, connfd;                
     struct sockaddr_in echoServAddr;
@@ -404,16 +348,10 @@ printf("\n\n\n\n\n");
 	cliAddrLen = sizeof(echoClntAddr);
 	connfd = accept( sock, (struct sockaddr *) &echoClntAddr, &cliAddrLen );
 
-//printf("IP address is: %s\n", inet_ntoa(echoClntAddr.sin_addr));
-//printf("port is: %d\n", (int) ntohs(echoClntAddr.sin_port));
-
 
 for(;;)
 {
     msgController(connfd,echoClntAddr);
-
-
-printf("EXIT ECHO STRING\n");
 
 }
 	close(connfd);

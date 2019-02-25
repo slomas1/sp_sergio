@@ -4,6 +4,8 @@
 #include        <arpa/inet.h>   /* for sockaddr_in and inet_ntoa() */
 #include        <sys/types.h>
 #include        <string.h>
+#include        <strings.h>
+#include        <unistd.h>
 #include        <time.h>
 #include        <unistd.h>
 #include		"message.h"
@@ -11,7 +13,12 @@
 #define ECHOMAX 255             /* Longest string to echo */
 #define BACKLOG 128
 
+int bingoCard[5][5];
+int markCard[5][5];
 
+
+
+int squareNumber();
 void
 DieWithError(const char *errorMessage) /* External error handling function */
 {
@@ -62,7 +69,7 @@ str_cli( int sockfd)
 
             	if ( (n = read(sockfd, &qmsg,sizeof(struct player_query) )) == 0)
             		DieWithError("str_cli: server terminated prematurely"); 
-                printf("\nResponse from server:\nNumber of players:%d\nPlayers:%s\n",qmsg.players,qmsg.List);
+                printf("\nResponse from server:\nNumber of players:%d\nPlayers:\n%s\n",qmsg.players,qmsg.List);
        		}
        		else if(strncmp(msg.command,"startgame",9)==0)
        		{
@@ -97,7 +104,7 @@ str_cli( int sockfd)
        			printf("Name: ");
        			scanf("%s",msg.arg1);
             	write(sockfd, &msg, sizeof(struct message));       			
-            	
+
        		}
        		else if(strcmp(msg.command,"help")==0)
        		{
@@ -108,48 +115,176 @@ str_cli( int sockfd)
        			write(sockfd, &msg, sizeof(struct message));
        			exit(0);
        		}
-       		else
-       			printf("Not Recognized\n");
 
         }	
 
 }
 
 
-void peer_talk()
+
+
+int BINGO()
 {
-
-
+		return 1;
 }
-int getnumber()
+void cardFill(char *calledNum)
 {
-    int rando;
-    //int k=20;
-    //int count=0;
-    //int flag=1;
-    //int totalGames=gameDB_GetSize(gameDB);
-    srand(time(NULL)); // randomize seed
-    int i=0;
-        rando=(rand() % 10);
+	int callednumber=4;
 
-    return rando;
 
-}
-
-void BINGO()
-{
-	char result[30];
-	while(strcmp(result,"Winner")!=0)
+	for(int i=0;i<5;i++)
 	{
-	if(getnumber() == 7)
-		strcpy(result,"Winner");
-	else
-		strcpy(result,"no Winner");
-
-		printf("Result:%s\n",result);
+		for(int j=0;j<5;j++)
+		{
+			if(callednumber==bingoCard[i][j])
+				markCard[i][j]=1;	
+		}
 	}
 }
 
+int winCheck()
+{
+	int win=0;
+	int b,i,n,g,o;
+	int i1,i2,i3,i4,i5;
+	b=0;i=0;n=0;g=0;o=0;
+	i1=0;i2=0;i3=0;i4=0;i5=0;
+
+	for(int i=0;i<5;i++)
+	{
+		for(int j=0;j<5;j++)
+		{
+			if(i==0 && markCard[4][j]==1)
+				i1++;
+			if(i==1 && markCard[4][j]==1)
+				i2++;
+			if(i==2 && markCard[4][j]==1)
+				i3++;
+			if(i==3 && markCard[4][j]==1)
+				i4++;
+			if(i==4 && markCard[4][j]==1)
+				i5++;
+
+			if(j==0 && markCard[i][0]==1)
+				b++;
+			if(j==1 && markCard[i][1]==1)
+				i++;
+			if(j==2 && markCard[i][2]==1)
+				n++;
+			if(j==3 && markCard[i][3]==1)
+				g++;
+			if(j==4 && markCard[i][4]==1)
+				o++;
+		}
+	}
+	if(i1>=5)	
+		win=1;
+	if(i2>=5)	
+		win=1;
+	if(i3>=5)	
+		win=1;
+	if(i4>=5)	
+		win=1;
+	if(i5>=5)	
+		win=1;
+	if(b>=5)	
+		win=1;
+	if(i>=5)	
+		win=1;
+	if(n>=5)	
+		win=1;
+	if(g>=5)	
+		win=1;
+	if(o>=5)	
+		win=1;
+	if(markCard[0][0]==1 && markCard[1][1]==1 && markCard[3][3]==1 && markCard[4][4]==1)
+		win=1;
+	if(markCard[4][0]==1 && markCard[3][1]==1 && markCard[1][3]==1 && markCard[0][4]==1)
+		win=1;
+
+	return win;
+}
+void cardGen()	
+{
+
+	int squareVal;
+	int flag=1;
+	
+	for(int i=0;i<5;i++)
+	{
+		for(int j=0;j<5;j++)
+		{
+
+			if(i==2 && j==2)
+			{
+				bingoCard[2][2]=0;
+			}
+			else
+			{
+				flag=1;
+				while(flag==1)
+				{
+					squareVal=squareNumber();
+					flag=0;
+					switch(j)
+					{
+						case 0:  
+						break;
+						case 1: squareVal+=15;
+						break;
+						case 2:  squareVal+=30;
+						break;
+						case 3: squareVal+=45;
+						break;
+						case 4: squareVal+=60;
+						break;
+					}
+					for(int k=0;k<5;k++)
+					{
+						for(int l=0;l<5;l++)
+						{
+						if(squareVal==bingoCard[k][l])
+							flag=1;
+							
+						}
+					}
+				}
+				bingoCard[i][j]=squareVal;
+			
+			}
+		}
+	}
+	for(int i=0;i<5;i++)
+	{
+		for(int j=0;j<5;j++)
+		{
+			printf("[%d]",bingoCard[i][j]);
+		}
+		printf("\n");
+	}
+
+//	printf("squareVal=%d\n",squareVal );
+}
+int squareNumber()
+{
+	int rando;
+    int flag=1;
+    srand(time(NULL)); // randomize seed
+    int i=0;
+    while (flag==1)
+    {   
+        rando=(rand() % 15);
+        flag=0; 
+    }
+
+    return rando+1;
+}
+void playerBingo()
+{
+	//	printf("bingo=%d\n", BINGO());
+
+	
+}
 int
 main(int argc, char **argv)
 {
@@ -166,9 +301,11 @@ main(int argc, char **argv)
 	servaddr.sin_port = htons(atoi(argv[2]));
 	inet_pton(AF_INET, argv[1], &servaddr.sin_addr);
 	connect(sockfd, (struct sockaddr *) &servaddr, sizeof(servaddr));	
-	
-	str_cli(sockfd);		
+	markCard[2][2]=1;
 
-//BINGO();
+	str_cli(sockfd);		
+//cardGen();
+//playerBingo();
+//callerBingo();
 	exit(0);
 }

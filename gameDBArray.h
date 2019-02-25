@@ -38,13 +38,13 @@ void gameDB_Delete(struct game gameArray[],char *deleteGameID)
 		temp=gameArray[i+1];
 		if(gameDeleted==1)
 		{
-	printf("Game already deleted\n");
+		//printf("Game already deleted\n");
 			gameArray[i]=temp;
 
 		}
 		if(strcmp(gameArray[i].gameID,deleteGameID)==0)
 		{
-			printf("gameArray[%d] = %s\n",i,gameArray[i].gameID);
+			//printf("gameArray[%d] = %s\n",i,gameArray[i].gameID);
 			gameArray[i]=temp;
 			gameDeleted=1;
 			
@@ -77,12 +77,16 @@ char* gameDB_List(struct game gameArray[])
 	}
 	return gtext;
 }
-/*
-int gameDB_idGen()
+int gameDB_exists(struct game gameArray[], char *game_id)
 {
+	int size=gameDB_GetSize(gameArray);
+	int found=0;
+	for(int i=0;i<size;i++)
+	{
+		if(strcmp(gameArray[i].gameID,game_id)==0)
+			found=1;
+	}
 
-
+	return found;
 }
 
-
-//*/
