@@ -1,0 +1,7 @@
+0000000000000000000000000000000000000000 9f22bb1497382ad2fa33dc6e122313da57d55290 Sergio Lomas <serg@Sergios-MacBook-Pro.local> 1550077623 -0700	clone: from git@bitbucket.org:slomas1/socketproject.git
+9f22bb1497382ad2fa33dc6e122313da57d55290 70d6a414cb3df5271d2dd44db02b92d145cba785 Sergio Lomas <serg@Sergios-MacBook-Pro.local> 1550109182 -0700	pull: Fast-forward
+70d6a414cb3df5271d2dd44db02b92d145cba785 610edc61f5c50d8d1b9df666e233fb22fd443fc2 Sergio Lomas <serg@Sergios-MacBook-Pro.local> 1550132325 -0700	commit: Query functional
+610edc61f5c50d8d1b9df666e233fb22fd443fc2 471e9124d171f77b6901fd09b970211294d03bf4 Sergio Lomas <serg@Sergios-MacBook-Pro.local> 1550132474 -0700	commit: Query functional
+471e9124d171f77b6901fd09b970211294d03bf4 4ce3b3562ca642d7c21873865d09899924cffdba Sergio Lomas <serg@Sergios-MacBook-Pro.local> 1550132738 -0700	commit: rm tcp-server.cpp
+4ce3b3562ca642d7c21873865d09899924cffdba 865fd3748501544692650baca7bd35b0a0cca6c4 Sergio Lomas <serg@Sergios-MacBook-Pro.local> 1550133068 -0700	commit: FUCKING readded tcp-server.c
+865fd3748501544692650baca7bd35b0a0cca6c4 fa6859ebaea4d5254adc86c527f2a63b4d12c3b4 Sergio Lomas <serg@Sergios-MacBook-Pro.local> 1550712037 -0700	commit: added github stuff, register with socket

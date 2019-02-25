@@ -50,18 +50,13 @@ msgController(int sockfd,struct sockaddr_in Client)
     struct game_query gqueryMsg;
     struct game_Init gameMsg;
 
-
-
     if ( (n = read(sockfd, &readMsg, sizeof(struct message))) == 0 )
     {
    	    return; /* connection closed by other end */
     }       
     readMsg.command[ n ] = '\0';            
-
-//printf("IP address is: %s\n", callerIP);   
     printf("Command = %s\n",readMsg.command );
 
-//*
 	if(strcmp(readMsg.command,"register") == 0 )
 	{
 		if(registerPlayer(readMsg.arg1,readMsg.arg2,readMsg.arg3) == 0)
@@ -91,10 +86,20 @@ msgController(int sockfd,struct sockaddr_in Client)
 
         write(sockfd, &gqueryMsg, sizeof(struct game_query) );
     }
+    if(strcmp(readMsg.command,"end") == 0 )
+    {
+        gameDB_Delete(gameDB,readMsg.arg1);
+        strcpy(line,"Success");
+        write(sockfd, line, n );
+    }
 
- //*/
-	//registerPlayer(char *playerName,char *ipAddres,char *port)
-       // write(sockfd, sendMsg, sizeof(message) );
+    if(strcmp(readMsg.command,"deregister") == 0 )
+    {
+            
+        strcpy(line,"Success");
+        playerDB_Delete(playerDB,readMsg.arg1);
+        write(sockfd, line, n );
+    }
     if(strcmp(readMsg.command,"exit") == 0 )
         exit(0);
 }
@@ -123,8 +128,6 @@ struct game_query gquery()
     char gqList[200];
 
     newGQ.numGames=num_games;
-    //printf("gquery entered\n");
-    printf("gquery->games=%d\n", num_games);
     if (num_games==0)
     {
         strcpy(newGQ.gameList,"EMPTY");
@@ -132,13 +135,6 @@ struct game_query gquery()
     }
     else
         strcpy(newGQ.gameList,gameDB_List(gameDB));
-
-        //printf("printlist:%s",gameDB_List(gameDB));
-        
-        //strcpy(newGQ.gameList,playerDB_List(playerDB));
-   // printf("newGQ%s\n",newGQ.gameList );
-        //strcpy(newGQ.gameList,gameDB_List(gameDB));
-    
 
     return newGQ;
 }
@@ -190,34 +186,26 @@ struct game_Init  game_start(int k,char *callerAddr,char *callerName)
     char newid[20];
     sprintf(newid,"%d",getID());
     struct game newGame;
-    //*
 	if(numPlayers>=k+1 && callerFound==1 )
 	{
 		selectKplayers(k,callIndex);
-        //printf("dblist=%s\n", playerDB_List(tempPlayerDB));
         strcpy(newGame.gamePList,playerDB_List(tempPlayerDB));
-        strcpy(newGame.gameID,newid);//FIX THIS
+        strcpy(newGame.gameID,newid);
         newGame.caller=playerDB[callIndex];
         gameDB_Add(gameDB,newGame);
 
         strcpy(gameInit.response,newGame.gameID);
         strcpy(gameInit.participantList,playerDB_List(tempPlayerDB));
         tempDB_Delete(tempPlayerDB);
-
-
-
 	}
     else
     {
-        printf("ELSE\n");
         strcpy(gameInit.response,newGame.gameID);
         strcpy(gameInit.participantList,"EMPTY");
 
     }
-
-	//add game
-//*/
-return gameInit;
+    
+    return gameInit;
 }
 
 int getID()

@@ -4,6 +4,7 @@
 #include        <arpa/inet.h>   /* for sockaddr_in and inet_ntoa() */
 #include        <sys/types.h>
 #include        <string.h>
+#include        <time.h>
 #include        <unistd.h>
 #include		"message.h"
 
@@ -33,13 +34,14 @@ str_cli( int sockfd)
 	char cmd;
 
        //while (fgets(sendline, ECHOMAX, fp) != NULL) 
+       		printf("\nType help to get a list of commands\n");
 	   	for(;;)
        	{
        		printf("\nCommand: ");
        		scanf("%s",msg.command);
 			//sendline[ n ] = '\0';
        		//printf("comparison = %d\n",strncmp(sendline,recvline,9));
-       		if(strncmp(msg.command,"register",9)==0)
+       		if(strncmp(msg.command,"register",8)==0)
        		{
        			printf("Player Name: ");
        			scanf("%s",msg.arg1);
@@ -80,6 +82,27 @@ str_cli( int sockfd)
                 printf("\nResponse from server:\nNumber of games:%d\nGames:\n%s\n",gqmsg.numGames,gqmsg.gameList);
 
        		}
+       		else if(strcmp(msg.command,"end")==0)
+       		{
+       			printf("GameID: ");
+       			scanf("%s",msg.arg1);
+            	write(sockfd, &msg, sizeof(struct message));
+            	if ( (n = read(sockfd, recvline, ECHOMAX)) == 0)
+            		DieWithError("str_cli: server terminated prematurely");
+                printf("\nResponse from server:%s\n",recvline);
+
+       		}
+       		if(strncmp(msg.command,"deregister",10)==0)
+       		{
+       			printf("Name: ");
+       			scanf("%s",msg.arg1);
+            	write(sockfd, &msg, sizeof(struct message));       			
+            	
+       		}
+       		else if(strcmp(msg.command,"help")==0)
+       		{
+       			printf("\nHELP:Type any of the commands seen below\nregister\t- This will register a new player\nqueryplayers\t- This will query for players that have been registered\nstartgame\t- This will attempt to start a new game\nquerygames\t- This will query for the games currently being played\nexit\t\t- This will close the manager and client connected to it\n");
+       		}
        		else if(strcmp(msg.command,"exit")==0)
        		{
        			write(sockfd, &msg, sizeof(struct message));
@@ -88,38 +111,8 @@ str_cli( int sockfd)
        		else
        			printf("Not Recognized\n");
 
-
-       		//printf("cmd:%s\narg1:%s\narg2:%s\narg3:%s\n", msg.command,msg.arg1,msg.arg2,msg.arg3);
-
-
-
-            //write(sockfd, sendline, strlen(sendline));
-
-            //if ( (n = read(sockfd, recvline, ECHOMAX)) == 0)
-            //    DieWithError("str_cli: server terminated prematurely");
-
         }	
 
-                //WORKING write(sockfd, &msg, sizeof(struct message));
-	//	if ( (n = read(sockfd, &msg, sizeof(struct message))) == 0)
-	//if(strcmp(msg.command,"register") != 0)
-	//{
-	//	if ( (n = read(sockfd, &qmsg, sizeof(struct player_query))) == 0)
-                //WORKING if ( (n = read(sockfd, recvline, ECHOMAX)) == 0)
-                      //WORKING DieWithError("str_cli: server terminated prematurely");
-                //write(sockfd, sendline, strlen(sendline));
-
-                //if ( (n = read(sockfd, recvline, ECHOMAX)) == 0)
-                //if ( (n = read(sockfd, &msg, ECHOMAX)) == 0)
-                //        DieWithError("str_cli: server terminated prematurely");
-
-				//msg[ n ] = '\0';
-                //printf("\nresponse from server:\nPlayers = %d\n%s\n",qmsg.players,qmsg.List);
-               // printf("\nresponse from server:%s\n",msg.command);
-	//}               
-                    //WORKING printf("\nresponse from server: %s\n",recvline);
-                //fputs(msg, stdout);
-        //}
 }
 
 
@@ -128,6 +121,35 @@ void peer_talk()
 
 
 }
+int getnumber()
+{
+    int rando;
+    //int k=20;
+    //int count=0;
+    //int flag=1;
+    //int totalGames=gameDB_GetSize(gameDB);
+    srand(time(NULL)); // randomize seed
+    int i=0;
+        rando=(rand() % 10);
+
+    return rando;
+
+}
+
+void BINGO()
+{
+	char result[30];
+	while(strcmp(result,"Winner")!=0)
+	{
+	if(getnumber() == 7)
+		strcpy(result,"Winner");
+	else
+		strcpy(result,"no Winner");
+
+		printf("Result:%s\n",result);
+	}
+}
+
 int
 main(int argc, char **argv)
 {
@@ -147,5 +169,6 @@ main(int argc, char **argv)
 	
 	str_cli(sockfd);		
 
+//BINGO();
 	exit(0);
 }
