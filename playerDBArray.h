@@ -1,3 +1,5 @@
+//Sergio Lomas
+//Group27
 int playerDB_GetSize(struct player playerArray[])
 {
 	int i=0;
@@ -49,9 +51,6 @@ void playerDB_Delete(struct player playerArray[],char *deletePlayer)
 	}
 }
 
-
-
-//void playerDB_List(struct player playerArray[])
 char* playerDB_List(struct player playerArray[])
 {
 	char *text=malloc(400*sizeof(char));
@@ -68,10 +67,6 @@ char* playerDB_List(struct player playerArray[])
 		strcat(text,")");
 		if(i!=size-1)
 			strcat(text,"\n");
-
-		//printf("playerArray[%d].name=%s\n",i,playerArray[i].name );
-		//printf("playerArray[%d].ip=%s\n",i,playerArray[i].ip );
-		//printf("playerArray[%d].port=%s\n",i,playerArray[i].port );
 	}
 	return text;
 //	return rtnPtr;
@@ -80,10 +75,8 @@ char* playerDB_List(struct player playerArray[])
 int 
 playerSearch(struct player playerArray[], char *playerName)
 {
-    //printf("Entered playerSearch\n");
     int numPlayers=playerDB_GetSize(playerArray);
     int foundPS=0;
-    //printf("get size complete\n");
     if (numPlayers>0)
     {
     	for(int i=0;i<numPlayers;i++)
@@ -92,7 +85,6 @@ playerSearch(struct player playerArray[], char *playerName)
                 foundPS=1;
         }
     }
-        //printf("numPlayers=%d\n",numPlayers );
         return foundPS;//1 is FOUND
 }
 
@@ -109,7 +101,6 @@ callerIndex(struct player playerArray[], char *callerIP)
                 callerIndex=i;
         }
     }
-	//printf("callerIndex=%d\n",callerIndex );
     return callerIndex;
 }
 char *caller_Name(struct player playerArray[], char *callerIP)

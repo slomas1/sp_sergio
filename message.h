@@ -1,3 +1,5 @@
+//Sergio Lomas
+//Group27
 struct player {
   char  name[50];
   char  ip[16];
@@ -31,11 +33,4 @@ struct message {
   char  arg2[50];
   char  arg3[50];
 };
-/*
-struct MinerInformation {
-	char userName[30];
-	char IP[16];
-	char port[6];
-  	int command ;
-	int initialCoins;
-};*/
+

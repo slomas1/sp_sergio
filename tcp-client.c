@@ -1,3 +1,5 @@
+//Sergio Lomas
+//Group27
 #include        <sys/socket.h>  /* for socket() and bind() */
 #include        <stdio.h>               /* printf() and fprintf() */
 #include        <stdlib.h>              /* for atoi() and exit() */
@@ -26,11 +28,7 @@ DieWithError(const char *errorMessage) /* External error handling function */
         exit(1);
 }
 
-//void str_cli(struct message msg, int sockfd)
-void
-//manager_talk(struct message msg, int sockfd)
-//str_cli(FILE *fp, int sockfd)
-str_cli( int sockfd)
+void str_cli( int sockfd)
 {
 	ssize_t n;
     char    sendline[ECHOMAX], recvline[ECHOMAX];

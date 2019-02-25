@@ -300,18 +300,6 @@ main(int argc, char **argv)
    strcpy(gameDB[0].gameID,"Tail");
    strcpy(tempPlayerDB[0].name,"Tail");
 
-
- /*
-    registerPlayer("playerName3","192.168.1.5","313");
-    registerPlayer("localhost","127.0.0.1","3413");
-    registerPlayer("playerName3","192.168.1.1","420");
-    registerPlayer("playerName2","192.168.1.2","950");
-    registerPlayer("Namecaller","192.168.1.3","3313");
-    registerPlayer("playerName9","192.168.1.76","955");
-    registerPlayer("playerName7","192.168.1.68","952");
- */
- //}  /*/UNCOMMENT FOR DEBUG
-
     int sock, connfd;                
     struct sockaddr_in echoServAddr;
     struct sockaddr_in echoClntAddr;
@@ -319,8 +307,6 @@ main(int argc, char **argv)
     char echoBuffer[ECHOMAX];       
     unsigned short echoServPort;    
     int recvMsgSize;                
-
-    //struct message client_message;
 
     if (argc != 2)         
     {
